@@ -128,6 +128,35 @@ app.get("/users/:id", async (req: Request, res: Response) => {
 
 
 })
+app.put("/users/:id", async (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    try {
+        const result = await pool.query(
+            `UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`,
+            [name, email, req.params.id]
+        )
+        // console.log(result);
+        if (result.rows.length === 0) {
+            res.status(400).json({
+                success: false,
+                message : "Do not Update"
+            })
+
+        } else{
+            res.status(201).json({
+                 success : true,
+                 message : `Succesfully ${name} and ${email} update `,
+                 data : result.rows[0]
+            })
+        }
+    }
+    catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+})
 app.get('/', (req: Request, res: Response) => {
     res.send('Next Level Express Server with TypeScript!')
 })
