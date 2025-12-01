@@ -139,14 +139,14 @@ app.put("/users/:id", async (req: Request, res: Response) => {
         if (result.rows.length === 0) {
             res.status(400).json({
                 success: false,
-                message : "Do not Update"
+                message: "Do not Update"
             })
 
-        } else{
+        } else {
             res.status(201).json({
-                 success : true,
-                 message : `Succesfully ${name} and ${email} update `,
-                 data : result.rows[0]
+                success: true,
+                message: `Succesfully ${name} and ${email} update `,
+                data: result.rows[0]
             })
         }
     }
@@ -157,6 +157,33 @@ app.put("/users/:id", async (req: Request, res: Response) => {
         })
     }
 })
+// deleted method 
+app.delete("/users/:id", async (req: Request, res: Response) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM users WHERE id = $1`, [req.params.id]
+        )
+        if (result.rowCount === 0) {
+            res.status(400).json({
+                success: false,
+                message: "User not found"
+            })
+        } else {
+            res.status(201).json({
+                success: true,
+                message: `User Deleted Successfully`,
+                data: null
+            })
+        }
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+        message: err.message
+        })
+    }
+
+})
+
 app.get('/', (req: Request, res: Response) => {
     res.send('Next Level Express Server with TypeScript!')
 })
