@@ -48,9 +48,9 @@ const initDB = async () => {
 initDB();
 
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Next Level Express Server with TypeScript!')
-})
+
+
+// USERS CRUD
 app.post("/users", async (req: Request, res: Response) => {
     const { name, email } = req.body;
     console.log(name);
@@ -75,6 +75,61 @@ app.post("/users", async (req: Request, res: Response) => {
     res.status(201).json({
         success: true, message: "Api is Working"
     })
+})
+// Get method use for all users loaded  
+app.get("/users", async (req: Request, res: Response) => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM users;`
+        )
+        res.status(200).json({
+            success: true,
+            message: "Successfully Users GET",
+            data: result.rows
+        })
+    }
+
+    catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message,
+            details: err
+        })
+
+    }
+})
+// Get use for only specific user laod or query 
+app.get("/users/:id", async (req: Request, res: Response) => {
+    // console.log(req.params.id);
+    // res.send({ messsge: "Successfully Api Work" })
+    try {
+        const result = await pool.query(
+            `SELECT * FROM users WHERE id = $1`, [req.params.id]
+        )
+        if (result.rows.length === 0) {
+            res.status(404).json({
+                success: false,
+                message: "User Not Found "
+            })
+        } else {
+            res.status(201).json({
+                success: true,
+                message: "User find successfully",
+                data: result.rows[0]
+            })
+        }
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+
+
+})
+app.get('/', (req: Request, res: Response) => {
+    res.send('Next Level Express Server with TypeScript!')
 })
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
