@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg"
 import dotenv from "dotenv";
 
@@ -47,8 +47,16 @@ const initDB = async () => {
 }
 initDB();
 
+// create middlewere
+const logger = (req: Request, res: Response, next: NextFunction) => {
+    console.log(`[${new Date().toISOString()}]  ${req.method} ${req.path}\n`);
+    next();
+}
 
-
+app.get('/', logger, (req: Request, res: Response) => {
+    res.send('Next Level Express Server with TypeScript!')
+})
+// console.log(logger);
 
 // USERS CRUD
 app.post("/users", async (req: Request, res: Response) => {
@@ -185,17 +193,17 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
 })
 
 /// TODO API USE
-app.post("/todo", async (req: Request, res: Response) => {
+app.post("/todos", async (req: Request, res: Response) => {
     const { user_id, title } = req.body;
-    console.log(user_id, title);
+    // console.log(user_id, title);
     try {
         const result = await pool.query(
             `INSERT INTO todos(user_id, title) VALUES($1, $2) RETURNING *`, [user_id, title]
         )
-        console.log(result);
+        // console.log(result);
         res.status(201).json({
             success: true,
-            message: "Todo Created ",
+            message: "TodoS Created ",
             data: result.rows[0]
         })
     }
@@ -207,10 +215,35 @@ app.post("/todo", async (req: Request, res: Response) => {
     }
 })
 
+app.get("/todos", async (req: Request, res: Response) => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM todos`
+        )
+        res.status(201).json({
+            success: true,
+            massage: "Fetch Todos",
+            data: result.rows
+        })
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+})
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Next Level Express Server with TypeScript!')
+// middlwere
+// create  notfound route
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        mesaage: "Route Not found ",
+        path: req.path
+    })
 })
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+
