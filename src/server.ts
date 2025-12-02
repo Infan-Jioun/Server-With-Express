@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import config from "./config";
 import initDB, { pool } from "./config/db";
+import logger from "./middlewere";
 dotenv.config({ path: path.join(process.cwd(), ".env") })
 const app = express()
 const port = config.port;
@@ -15,19 +16,13 @@ app.use(express.json())
 // app.use(express.urlencoded())
 
 
-
+// initialize database
 initDB();
-
-// create middlewere
-const logger = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`[${new Date().toISOString()}]  ${req.method} ${req.path}\n`);
-    next();
-}
-
+// routes AND controllers
 app.get('/', logger, (req: Request, res: Response) => {
     res.send('Next Level Express Server with TypeScript!')
 })
-// console.log(logger);
+
 
 // USERS CRUD
 app.post("/users", async (req: Request, res: Response) => {
