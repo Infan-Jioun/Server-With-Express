@@ -178,11 +178,35 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
     } catch (err: any) {
         res.status(500).json({
             success: false,
-        message: err.message
+            message: err.message
         })
     }
 
 })
+
+/// TODO API USE
+app.post("/todo", async (req: Request, res: Response) => {
+    const { user_id, title } = req.body;
+    console.log(user_id, title);
+    try {
+        const result = await pool.query(
+            `INSERT INTO todos(user_id, title) VALUES($1, $2) RETURNING *`, [user_id, title]
+        )
+        console.log(result);
+        res.status(201).json({
+            success: true,
+            message: "Todo Created ",
+            data: result.rows[0]
+        })
+    }
+    catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+})
+
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Next Level Express Server with TypeScript!')
