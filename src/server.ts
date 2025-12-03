@@ -6,6 +6,7 @@ import path from "path";
 import config from "./config";
 import initDB, { pool } from "./config/db";
 import logger from "./middlewere";
+import { userRoutes } from "./modules/user/user.routes";
 dotenv.config({ path: path.join(process.cwd(), ".env") })
 const app = express()
 const port = config.port;
@@ -23,55 +24,58 @@ app.get('/', logger, (req: Request, res: Response) => {
     res.send('Next Level Express Server with TypeScript!')
 })
 
-
+app.use("/users", userRoutes)
+console.log(userRoutes);
 // USERS CRUD
-app.post("/users", async (req: Request, res: Response) => {
-    const { name, email } = req.body;
-    console.log(name);
-    try {
-        const result = await pool.query(
-            `INSERT INTO users(name , email) VALUES($1, $2) RETURNING *`,
-            [name, email]
-        )
-        // console.log(result.rows[0]);
+// app.post("/users", async (req: Request, res: Response) => {
+//     const { name, email } = req.body;
+//     console.log(name);
+//     try {
+//         const result = await pool.query(
+//             `INSERT INTO users(name , email) VALUES($1, $2) RETURNING *`,
+//             [name, email]
+//         )
+//         // console.log(result.rows[0]);
 
-        res.status(201).json({
-            success: true,
-            message: "Data insrted successfully",
-            data: result.rows[0]
-        })
-    } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
-    }
-    res.status(201).json({
-        success: true, message: "Api is Working"
-    })
-})
+//         res.status(201).json({
+//             success: true,
+//             message: "Data insrted successfully",
+//             data: result.rows[0]
+//         })
+//     } catch (err: any) {
+//         res.status(500).json({
+//             success: false,
+//             message: err.message
+//         })
+//     }
+//     res.status(201).json({
+//         success: true, message: "Api is Working"
+//     })
+// })
+// app.use("/users", userRoutes)
 // Get method use for all users loaded  
-app.get("/users", async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(
-            `SELECT * FROM users;`
-        )
-        res.status(200).json({
-            success: true,
-            message: "Successfully Users GET",
-            data: result.rows
-        })
-    }
+// app.get("/users", async (req: Request, res: Response) => {
+//     try {
+//         const result = await pool.query(
+//             `SELECT * FROM users;`
+//         )
+//         res.status(200).json({
+//             success: true,
+//             message: "Successfully Users GET",
+//             data: result.rows
+//         })
+//     }
 
-    catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message,
-            details: err
-        })
+//     catch (err: any) {
+//         res.status(500).json({
+//             success: false,
+//             message: err.message,
+//             details: err
+//         })
 
-    }
-})
+//     }
+// })
+app.use("/users", userRoutes)
 // Get use for only specific user laod or query 
 app.get("/users/:id", async (req: Request, res: Response) => {
     // console.log(req.params.id);
