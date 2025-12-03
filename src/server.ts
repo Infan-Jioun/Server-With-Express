@@ -25,7 +25,7 @@ app.get('/', logger, (req: Request, res: Response) => {
 })
 
 app.use("/users", userRoutes)
-console.log(userRoutes);
+
 // USERS CRUD
 // app.post("/users", async (req: Request, res: Response) => {
 //     const { name, email } = req.body;
@@ -54,28 +54,7 @@ console.log(userRoutes);
 // })
 // app.use("/users", userRoutes)
 // Get method use for all users loaded  
-// app.get("/users", async (req: Request, res: Response) => {
-//     try {
-//         const result = await pool.query(
-//             `SELECT * FROM users;`
-//         )
-//         res.status(200).json({
-//             success: true,
-//             message: "Successfully Users GET",
-//             data: result.rows
-//         })
-//     }
-
-//     catch (err: any) {
-//         res.status(500).json({
-//             success: false,
-//             message: err.message,
-//             details: err
-//         })
-
-//     }
-// })
-app.use("/users", userRoutes)
+app.get("/users", userRoutes)
 // Get use for only specific user laod or query 
 app.get("/users/:id", async (req: Request, res: Response) => {
     // console.log(req.params.id);

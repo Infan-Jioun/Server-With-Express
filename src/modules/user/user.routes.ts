@@ -5,7 +5,8 @@ import { userContrllers } from './user.controller';
 const router = express.Router();
 // app.use("/users", userRoutes)
 // routes -> controller -> service
-router.post("/", logger, userContrllers.createUser)
+router.post("/", logger, userContrllers.createUser);
+router.get("/", logger, userContrllers.fetchUser)
 
 router.put("/id", logger, async (req: Request, res: Response) => {
     const { name, email } = req.body;
