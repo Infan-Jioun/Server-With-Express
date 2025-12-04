@@ -29,10 +29,19 @@ const updateTodo = async (payload: Record<string, unknown>, id: string) => {
     );
     return result;
 };
+const deletedTodo = async (id: string) => {
+    const result = await pool.query("DELETE FROM todos WHERE id=$1 RETURNING *", [
+        id,
+    ]);
+    return result;
+};
+
+
 const todoService = {
     createTodo,
     fetchTodo,
     singelTodo,
-    updateTodo
+    updateTodo,
+    deletedTodo
 }
 export default todoService;
