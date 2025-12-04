@@ -1,3 +1,4 @@
+import { title } from "process";
 import { pool } from "../../config/db";
 
 const createTodo = async (payload: Record<string, unknown>) => {
@@ -20,9 +21,18 @@ const singelTodo = async (id: string) => {
     )
     return result
 }
+const updateTodo = async (payload: Record<string, unknown>, id: string) => {
+    const { title, completed } = payload;
+    const result = await pool.query(
+        `UPDATE todos SET title=$1, completed=$2 WHERE id=$3 RETURNING *`,
+        [title, completed, id]
+    );
+    return result;
+};
 const todoService = {
     createTodo,
     fetchTodo,
-    singelTodo
+    singelTodo,
+    updateTodo
 }
 export default todoService;

@@ -21,7 +21,7 @@ app.get('/', logger, (req: Request, res: Response) => {
 })
 app.use("/users", userRoutes)
 /// TODO API USE
-app.use("/todos", todoRoutes)
+app.use("/todos", logger, todoRoutes)
 
 // middlwere
 // create  notfound route
