@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg"
 import dotenv from "dotenv";
-
 import path from "path";
 import config from "./config";
 import initDB, { pool } from "./config/db";
