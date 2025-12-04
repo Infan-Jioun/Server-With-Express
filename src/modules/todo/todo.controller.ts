@@ -35,7 +35,28 @@ const fetchTodo = async (req: Request, res: Response) => {
         })
     }
 }
+const singelTodo = async (req: Request, res: Response) => {
+    try {
+        const result = await todoService.singelTodo(req.params.id!);
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                messgae: "Not found Todo",
+
+            })
+
+        }
+        res.json(result.rows[0])
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.mesaage
+
+        })
+    }
+}
 export const todoController = {
     todoCreate,
-    fetchTodo
+    fetchTodo,
+    singelTodo
 }

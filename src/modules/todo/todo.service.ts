@@ -14,8 +14,15 @@ const fetchTodo = async () => {
     )
     return result;
 }
+const singelTodo = async (id: string) => {
+    const result = await pool.query(
+        `SELECT * FROM todos WHERE id = $1 `, [id]
+    )
+    return result
+}
 const todoService = {
     createTodo,
-    fetchTodo
+    fetchTodo,
+    singelTodo
 }
 export default todoService;

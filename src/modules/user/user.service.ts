@@ -30,6 +30,7 @@ const deletedUser = async (id: string) => {
     )
     return result
 }
+
 // todo 
 export const userService = {
     createUser,
