@@ -22,7 +22,7 @@ app.get('/', logger, (req: Request, res: Response) => {
 app.use("/users", userRoutes)
 /// TODO API USE
 app.use("/todos", logger, todoRoutes)
-
+app.use("/auth")
 // middlwere
 // create  notfound route
 app.use((req, res) => {
