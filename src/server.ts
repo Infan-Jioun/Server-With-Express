@@ -54,92 +54,39 @@ app.use("/users", userRoutes)
 // })
 // app.use("/users", userRoutes)
 // Get method use for all users loaded  
-app.get("/users", userRoutes)
 // Get use for only specific user laod or query 
-app.get("/users/:id", async (req: Request, res: Response) => {
-    // console.log(req.params.id);
-    // res.send({ messsge: "Successfully Api Work" })
-    try {
-        const result = await pool.query(
-            `SELECT * FROM users WHERE id = $1`, [req.params.id]
-        )
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: "User Not Found "
-            })
-        } else {
-            res.status(201).json({
-                success: true,
-                message: "User find successfully",
-                data: result.rows[0]
-            })
-        }
-    } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
-    }
 
+// app.put("/users/:id", async (req: Request, res: Response) => {
+//     const { name, email } = req.body;
+//     try {
+//         const result = await pool.query(
+//             `UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`,
+//             [name, email, req.params.id]
+//         )
+//         // console.log(result);
+//         if (result.rows.length === 0) {
+//             res.status(400).json({
+//                 success: false,
+//                 message: "Do not Update"
+//             })
 
-
-})
-app.put("/users/:id", async (req: Request, res: Response) => {
-    const { name, email } = req.body;
-    try {
-        const result = await pool.query(
-            `UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`,
-            [name, email, req.params.id]
-        )
-        // console.log(result);
-        if (result.rows.length === 0) {
-            res.status(400).json({
-                success: false,
-                message: "Do not Update"
-            })
-
-        } else {
-            res.status(201).json({
-                success: true,
-                message: `Succesfully ${name} and ${email} update `,
-                data: result.rows[0]
-            })
-        }
-    }
-    catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
-    }
-})
+//         } else {
+//             res.status(201).json({
+//                 success: true,
+//                 message: `Succesfully ${name} and ${email} update `,
+//                 data: result.rows[0]
+//             })
+//         }
+//     }
+//     catch (err: any) {
+//         res.status(500).json({
+//             success: false,
+//             message: err.message
+//         })
+//     }
+// })
 // deleted method 
-app.delete("/users/:id", async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(
-            `DELETE FROM users WHERE id = $1`, [req.params.id]
-        )
-        if (result.rowCount === 0) {
-            res.status(400).json({
-                success: false,
-                message: "User not found"
-            })
-        } else {
-            res.status(201).json({
-                success: true,
-                message: `User Deleted Successfully`,
-                data: null
-            })
-        }
-    } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        })
-    }
-
-})
+// app.delete("/users/:id", )
 
 /// TODO API USE
 app.post("/todos", async (req: Request, res: Response) => {

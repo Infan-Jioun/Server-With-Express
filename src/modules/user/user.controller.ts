@@ -40,7 +40,88 @@ const fetchUser = async (req: Request, res: Response) => {
 
     }
 }
-export const userContrllers = {
+const fetchSingelUser = async (req: Request, res: Response) => {
+    // console.log(req.params.id);
+    // res.send({ messsge: "Successfully Api Work" })
+    try {
+        const result = await userService.fetchSingelUser(req.params.id!)
+        if (result.rows.length === 0) {
+            res.status(404).json({
+                success: false,
+                message: "User Not Found "
+            })
+        } else {
+            res.status(201).json({
+                success: true,
+                message: "User find successfully",
+                data: result.rows[0]
+            })
+        }
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+
+
+}
+const putUser = async (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    try {
+        const result = await userService.putUser(name, email, req.params.id as string)
+        // console.log(result);
+        if (result.rows.length === 0) {
+            res.status(400).json({
+                success: false,
+                message: "Do not Update"
+            })
+
+        } else {
+            res.status(201).json({
+                success: true,
+                message: `Succesfully ${name} and ${email} update `,
+                data: result.rows[0]
+            })
+        }
+    }
+    catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+// console.log(putUser);
+const deletedUser = async (req: Request, res: Response) => {
+    try {
+        const result = await userService.deletedUser(req.params.id as string)
+
+        if (result.rowCount === 0) {
+            res.status(400).json({
+                success: false,
+                message: "User not found"
+            })
+        } else {
+            res.status(201).json({
+                success: true,
+                message: `User Deleted Successfully`,
+                data: null
+            })
+        }
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+}
+export const userControllers = {
     createUser,
-    fetchUser
+    fetchUser,
+    fetchSingelUser,
+    putUser,
+    deletedUser
 }
