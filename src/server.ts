@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import config from "./config";
 import initDB, { pool } from "./config/db";
-import logger from "./middlewere";
+import logger from "./middlewere/middlewere";
 import { userRoutes } from "./modules/user/user.routes";
 import { todoRoutes } from "./modules/todo/todo.routes";
 import { authRoutes } from "./modules/auth/auth.routes";

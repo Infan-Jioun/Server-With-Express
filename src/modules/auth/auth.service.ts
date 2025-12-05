@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs"
 import { pool } from "../../config/db";
 import jwt from "jsonwebtoken"
+import config from "../../config";
 const loginUser = async (email: string, password: string) => {
     console.log({ email });
     const result = await pool.query(
@@ -18,8 +19,8 @@ const loginUser = async (email: string, password: string) => {
         return false;
 
     }
-    const secret = "KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
-    const token = jwt.sign({ name: user.name, email: user.email }, secret, {
+
+    const token = jwt.sign({ name: user.name, email: user.email }, config.jwtSecret as string, {
         expiresIn: "1hr"
     })
     console.log({ token, user });
