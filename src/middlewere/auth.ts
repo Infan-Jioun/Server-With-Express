@@ -1,10 +1,25 @@
 import { NextFunction, Request, Response } from "express";
-
-const auth = () => {
+import jwt, { JwtPayload } from "jsonwebtoken"
+import config from "../config";
+const auth = (...roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization;
-        console.log({ authToken: token });
-        next();
+        try {
+            const token = req.headers.authorization;
+            console.log({ authToken: token });
+            if (!token) {
+                return res.status(500).json({ message: "Your are not allowed" })
+            }
+            const decoded = jwt.verify(token, config.jwtSecret as string) as JwtPayload;
+            console.log({ decoded });
+            req.user = decoded;
+            if (roles.length && !roles.includes(decoded.role as string))
+                next();
+        } catch (err: any) {
+            res.status(500).json({
+                success: false,
+                message: err.message
+            })
+        }
     }
 }
 export default auth;
